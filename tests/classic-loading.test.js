@@ -18,6 +18,7 @@ test('les scripts de la page sont compilables sans chargeur de modules', async (
   // Le moteur doit être disponible avant le script d'interface, sans import réseau.
   const context = vm.createContext({});
   scripts[0].runInContext(context);
-  const result = context.CodeCouleurs.createGame(() => 0).submit(Array(4).fill('rouge'));
-  assert.equal(result.state.status, 'won');
+  const game = context.CodeCouleurs.createGame(() => 0);
+  game.startGame();
+  assert.equal(game.submitGuess(Array(4).fill('rouge')).status, 'won');
 });

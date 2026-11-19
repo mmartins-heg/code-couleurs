@@ -1,122 +1,124 @@
 # Code Couleurs
 
-Code Couleurs est un jeu de déduction en français, pour les personnes qui souhaitent jouer sur ordinateur ou smartphone. Retrouvez un code secret de quatre couleurs en dix essais maximum, à l'aide de deux nombres d'indices après chaque proposition.
+Code Couleurs est un jeu de déduction en français, utilisable sur ordinateur et smartphone. Retrouvez quatre couleurs cachées en dix essais maximum, à l’aide des nombres de couleurs bien placées et présentes mais mal placées.
 
 ## État actuel
 
-- Disponible : application responsive, sélection et modification des quatre positions, six couleurs avec symboles et libellés, validation, historique des dix essais, indices tenant compte des doublons, victoire, défaite, révélation du code en fin de partie et nouvelle partie.
-- Disponible : règles intégrées, navigation au clavier, tests du moteur sans dépendances et configuration de contrôle GitHub Actions.
-- Limites connues : la partie est conservée en mémoire uniquement ; actualiser ou quitter la page la réinitialise. Aucun compte, classement, stockage ou service distant. Le secret est caché dans l'interface, mais ce jeu exécuté dans le navigateur ne constitue pas une protection contre l'inspection technique.
-- Dépôt source : [mmartins-heg/code-couleurs](https://github.com/mmartins-heg/code-couleurs), privé. Le tag `jalon-1` identifie la première version du projet.
-- Limites connues : application non déployée sur GitHub Pages ; aucune adresse de jeu publique à ce stade. Pas de vérification sur téléphone physique, Safari, Firefox ou lecteur d'écran.
+- Disponible : six couleurs avec libellés et symboles, quatre positions modifiables, dix essais, indices tenant compte des doublons, historique, victoire, défaite et nouvelle partie.
+- Disponible : API commune de test **0.2**, utilisant exactement la même partie et le même moteur que l’interface, accessible uniquement avec `?test=1`.
+- Disponible : tests Node.js sans dépendances et page de vérification de l’intégration dans le navigateur.
+- Dépôt : [mmartins-heg/code-couleurs](https://github.com/mmartins-heg/code-couleurs). `jalon-1` conserve la première version ; `jalon-2` désignera la version API 0.2 vérifiée.
+- Limites connues : partie en mémoire, réinitialisée en quittant ou actualisant la page ; aucun compte ni sauvegarde. Le secret n’est jamais révélé séparément, même en fin de partie. Le jeu s’exécute dans le navigateur et ne prétend pas résister à une inspection technique.
+- Publication GitHub Pages et vérification sur l’adresse publique : en cours. Pas de test sur téléphone physique, Safari, Firefox ou lecteur d’écran ; aucun audit complet d’accessibilité.
 
 ## Commencer
 
-Pour jouer localement, ouvrir **`index.html` dans un navigateur récent** en conservant les autres fichiers du projet à côté. Les pastilles et les commandes sont chargées par des scripts classiques, sans serveur ni installation.
+Adresses GitHub Pages prévues pour ce dépôt :
 
-Autre possibilité : utiliser le serveur local fourni. Il nécessite Node.js ; environnement vérifié : Windows, PowerShell, Node.js **24.22.1**. Aucun paquet à installer ; npm n'est pas nécessaire.
+- [Jouer](https://mmartins-heg.github.io/code-couleurs/).
+- [Ouvrir le mode test](https://mmartins-heg.github.io/code-couleurs/?test=1).
+- [Vérifier l’intégration de l’API](https://mmartins-heg.github.io/code-couleurs/docs/verification.html).
 
-1. Ouvrir un terminal dans le dossier du projet.
-2. Lancer le serveur :
+En mode normal, une partie aléatoire démarre immédiatement. Sélectionner une position, choisir une couleur puis valider après avoir rempli les quatre positions. Les couleurs peuvent se répéter ; les propositions restent modifiables avant validation.
 
-   ```sh
-   node server.mjs
-   ```
+En mode test, l’état initial est `not-started` : appeler `startGame()` ou cliquer sur **Nouvelle partie** avant de jouer.
 
-3. Ouvrir [http://localhost:4173](http://localhost:4173).
-4. Choisir les quatre couleurs, puis cliquer sur **Valider la proposition**.
-5. Arrêter le serveur avec `Ctrl+C` lorsque vous avez terminé.
+Pour jouer localement sans installation, télécharger et extraire tout le projet, puis ouvrir `index.html` en conservant les fichiers voisins. JavaScript doit être activé. Une page de fichier sur `github.com` affiche le code source, pas le jeu.
 
-Le serveur de développement écoute uniquement sur l'ordinateur local. Si les pastilles ne s'affichent pas, vérifier que `game-core.js`, `app.js` et `style.css` sont présents à côté de `index.html`, que JavaScript est activé, puis actualiser la page. Une page de fichier sur `github.com` affiche le code source : pour jouer, télécharger le projet et ouvrir le fichier local, utiliser le serveur ci-dessus ou un hébergement web.
+Pour utiliser aussi la page de vérification, lancer le serveur local depuis le dossier du projet. Node.js **24.22.1** est l’environnement vérifié ; npm et les paquets externes ne sont pas nécessaires.
 
-Pour la future publication sur GitHub Pages, une fois la publication autorisée et les fichiers envoyés dans un dépôt :
+```sh
+node server.mjs
+```
 
-1. Ouvrir les paramètres du dépôt, **Settings → Pages**.
-2. Choisir **Deploy from a branch** comme source.
-3. Sélectionner la branche contenant les fichiers et le dossier **/(root)**, puis enregistrer.
-4. Attendre la fin du déploiement et ouvrir l'URL fournie par GitHub Pages.
+Ouvrir [http://localhost:4173](http://localhost:4173), puis au besoin [la page de contrôle locale](http://localhost:4173/docs/verification.html). Arrêter le serveur avec `Ctrl+C`. Il écoute uniquement sur l’ordinateur local.
 
-L'application ne nécessite aucune compilation. Les chemins relatifs permettent son utilisation sous l'adresse d'un dépôt. Voir la [documentation officielle de la source de publication GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site). Le fichier `.nojekyll` permet de servir les fichiers statiques directement.
+Pour publier ou reprendre la configuration GitHub Pages : dans **Settings → Pages**, sélectionner **Deploy from a branch**, la branche `main` et **/(root)**, puis enregistrer. Il n’y a aucune compilation. Les chemins relatifs et `.nojekyll` permettent l’hébergement sous `/code-couleurs/`. Voir la [documentation officielle GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
 
-## Exemple d'utilisation
+## Exemple d’utilisation
 
-- Entrée ou action : dans une partie d'exemple dont le secret serait `rouge, rouge, bleu, vert`, proposer `rouge, bleu, rouge, rouge`.
-- Résultat attendu : **1 bien placée**, **2 mal placées**, un essai consommé et la proposition conservée dans l'historique. Les indices ne désignent aucune position.
-- Entrée ou action : valider avec une position vide.
-- Résultat attendu : une explication s'affiche, sans changement des essais ni de l'historique.
+- Entrée ou action : avec le secret d’exemple `rouge, rouge, bleu, vert`, proposer `rouge, bleu, rouge, rouge`.
+- Résultat attendu : **1 bien placée**, **2 mal placées**, un seul essai consommé et la proposition conservée dans l’historique. Les indices n’indiquent aucune position.
+- Entrée ou action : valider une proposition incomplète.
+- Résultat attendu : un message explique le refus, sans consommer d’essai ni modifier l’historique.
 
-Le code de chaque véritable partie est tiré au hasard ; le secret de cet exemple n'est pas imposé dans l'application.
+Pour reproduire l’exemple via la console du navigateur, ouvrir le jeu avec `?test=1`, attendre que `window.codeSecretTest` soit disponible, puis exécuter :
+
+```js
+const api = window.codeSecretTest;
+api.version; // "0.2"
+api.getConfig();
+await api.startGame({ secret: ["rouge", "rouge", "bleu", "vert"] });
+const state = await api.submitGuess(["rouge", "bleu", "rouge", "rouge"]);
+console.assert(state.attempts === 1);
+console.assert(state.lastResult.wellPlaced === 1);
+console.assert(state.lastResult.misplaced === 2);
+api.getState();
+```
+
+La configuration renvoyée est :
+
+```json
+{
+  "apiVersion": "0.2",
+  "rulesVersion": "code-couleurs-1.0",
+  "secretLength": 4,
+  "maxAttempts": 10,
+  "allowDuplicates": true,
+  "colors": ["rouge", "bleu", "vert", "jaune", "orange", "violet"]
+}
+```
+
+`getConfig()` et `getState()` sont synchrones. `startGame(options?)` et `submitGuess(guess)` renvoient des promesses, résolues après la mise à jour de l’écran. Attendre chaque appel avant le suivant.
+
+L’état contient `status` (`not-started`, `playing`, `won` ou `lost`), `attempts`, `history: [{ guess, result: { wellPlaced, misplaced } }]`, `lastGuess`, `lastResult` et `lastError`. Les trois derniers champs valent initialement `null`. Les résultats sont sérialisables en JSON et indépendants de l’état interne. Aucun champ `secret` ou `solution` n’est renvoyé.
+
+`startGame()` et `startGame({})` effectuent un tirage aléatoire. `{ secret: [...] }` impose un code pour un test. Toute autre clé ou forme d’options est refusée. Un démarrage invalide rejette la promesse avec une `Error` portant `code` et `message`, sans modifier l’état ni l’écran, y compris `lastError`.
+
+Un refus de `submitGuess` résout la promesse vers l’état courant avec `lastError: { code, message }`, sans changer les données de jeu. Priorités : `game-not-started`, `game-finished`, `invalid-type`, `invalid-length`, `invalid-color`. Un tableau doit être dense et composé de chaînes ; leur type est contrôlé avant la longueur, puis les couleurs autorisées. Un démarrage réussi ou une proposition valide efface `lastError`.
+
+Sans `?test=1`, `window.codeSecretTest` n’est pas exposé. Aucun appel à un serveur applicatif ou service d’IA, aucune clé et aucune donnée personnelle ne sont nécessaires.
 
 ## Vérifier
 
-Exécuter tous les tests du moteur :
+Depuis le dossier du projet :
 
 ```sh
 node --test
 ```
 
-Résultat observé le **17 novembre 2026**, puis confirmé le **19 novembre 2026**, sous Windows avec Node.js 24.22.1 : **9 tests réussis, aucun échec**. Ils couvrent la palette, les doublons, les propositions refusées, la victoire au dixième essai, la défaite, le blocage après la fin, la réinitialisation et l'isolation des données. Un test compare les **1 679 616 couples** de codes possibles à un calcul indépendant par fréquences.
+Résultat local le **19 novembre 2026**, sous Windows avec Node.js 24.22.1 : **19 tests réussis, aucun échec**. Ils couvrent configuration, état initial, T01 à T09, priorités des refus, options invalides, indépendance des données, nouveau tirage, victoire au dixième essai, défaite, blocage et redémarrage. Un contrôle exhaustif compare les **1 679 616 couples** de codes à un calcul indépendant par fréquences. Un autre contrôle vérifie que les scripts de la page se compilent sans chargeur de modules.
 
-Contrôles réalisés dans le navigateur intégré de Codex le **17 novembre 2026** : chargement, refus d'une proposition vide avec dix essais conservés, choix des couleurs, validation avec ajout de l'historique et des indices, nouvelle partie et ouverture/fermeture des règles. Affichage examiné à **1280 × 1050** et **375 × 812**, sans débordement horizontal observé. Aperçu : [capture ordinateur](docs/apercu-ordinateur.jpg).
+Dans [la page de vérification](https://mmartins-heg.github.io/code-couleurs/docs/verification.html), cliquer sur **Exécuter les contrôles**. Elle charge le véritable jeu dans un cadre et compare l’API avec l’écran. Résultat local via HTTP dans le navigateur intégré de Codex le **19 novembre 2026** : **20 contrôles réussis, aucun échec**. Cette page ne remplace pas l’outil de test de l’enseignant, non fourni.
 
-Correction du chargement le **19 novembre 2026** : remplacement du chargement par modules dans la page par des scripts classiques. Les neuf tests du moteur restent réussis ; un dixième test vérifie que les scripts de la page se compilent sans chargeur de modules et que le moteur s'initialise avant l'interface. Dans le navigateur intégré, via serveur HTTP : pastilles visibles, sélection et validation avec historique et indices fonctionnelles, aucune erreur JavaScript observée. L'ouverture directe en `file://` n'a pas pu être contrôlée dans cet outil, qui bloque ce protocole ; elle reste à confirmer dans le navigateur de l'utilisateur.
+Contrôles manuels utiles : modifier une position avant validation ; jouer au clavier (`Tab`, `Entrée` ou `Espace`) ; ouvrir et fermer les règles ; examiner les propositions et indices ; relancer une partie ; vérifier sur un smartphone physique. L’ouverture directe `file://` n’est pas contrôlable par l’outil de navigateur utilisé ici ; le chargement sans modules est testé séparément.
 
-Pour une reprise manuelle :
-
-1. Valider une proposition vide : vérifier le message et les dix essais restants.
-2. Choisir quatre couleurs, modifier une position avant validation, puis valider : vérifier un seul essai consommé et la proposition finale dans l'historique.
-3. Jouer jusqu'à la fin : vérifier le message, la révélation du secret et les commandes de proposition désactivées.
-4. Cliquer sur **Nouvelle partie** : vérifier les dix essais, le code caché, l'historique vide et les quatre positions réinitialisées.
-5. Naviguer avec `Tab`, activer les boutons avec `Entrée` ou `Espace`, ouvrir les règles et les fermer avec `Échap`.
-
-Les contrôles d'interface sont manuels, sans suite automatisée de navigateur. La victoire au dixième essai est testée dans le moteur ; elle n'a pas été reproduite dans l'interface. L'accessibilité n'a pas fait l'objet d'un audit complet. Le workflow GitHub Actions et l'hébergement public ne sont pas encore exécutés sur GitHub.
+Les résultats historiques du 17 novembre concernaient `jalon-1` et ne constituent pas la vérification de l’API 0.2. [La capture initiale](docs/apercu-ordinateur.jpg) illustre uniquement la présentation de cette première version.
 
 ## Se repérer
 
 | Fichier ou dossier | Rôle |
 | --- | --- |
-| `index.html` | Structure de la page et règles affichées. |
-| `style.css` | Présentation, variantes ordinateur/mobile, focus clavier. |
-| `app.js` | Interactions, rendu du plateau, annonces des résultats. |
-| `game-core.js` | Moteur indépendant, chargé comme script classique pour permettre l'ouverture locale. |
-| `game.js` | Adaptateur de l'API en module, utilisé par les tests et les intégrations. |
-| `tests/game.test.js` | Tests des règles, dont le contrôle exhaustif des indices. |
-| `tests/classic-loading.test.js` | Contrôle du chargement sans modules dans la page. |
-| `server.mjs` | Serveur de développement local, réservé aux fichiers de l'application. |
-| `favicon.svg` | Icône du projet. |
-| `docs/` | Aperçu de l'interface vérifiée. |
-| `.github/workflows/checks.yml` | Exécution des tests à chaque push ou pull request. |
-| `AGENTS.md` | Consignes de travail pour les interventions futures. |
+| `index.html` | Page, règles et chargement des scripts. |
+| `style.css` | Présentation ordinateur/mobile et focus clavier. |
+| `game-core.js` | Moteur unique : état, validation, indices, démarrage et propositions. |
+| `game.js` | Adaptateur en module pour les tests et intégrations. |
+| `app.js` | Interface et API commune, branchées sur la même instance du moteur. |
+| `tests/game.test.js` | Tests des règles et du contrat 0.2. |
+| `tests/classic-loading.test.js` | Contrôle du chargement sans modules. |
+| `docs/verification.html` et `docs/verification.js` | Contrôles API/interface reproductibles dans le navigateur. |
+| `server.mjs` | Serveur local statique de développement, sans API HTTP. |
+| `.github/workflows/checks.yml` | Exécution des tests Node.js sur GitHub. |
+| `AGENTS.md` | Consignes de travail. |
 
-Source de référence : les sept règles fournies pour ce projet, retranscrites ci-dessous. Elles priment sur les variantes commerciales du Mastermind.
+Sources de référence : les sept règles fournies pour le projet (`code-couleurs-1.0`) et le document pédagogique **API commune de test — Code secret en couleurs, contrat 0.2, édition Google 1.5, mise à jour du 28/10/2026**. Le contrat 0.2 précise l’interface attendue et interdit une révélation séparée du secret, y compris après la fin. Le document pédagogique n’est pas redistribué dans ce dépôt.
 
-1. La palette commune est `rouge`, `bleu`, `vert`, `jaune`, `orange`, `violet`, dans cet ordre. Ce sont les identifiants exacts de l'API JavaScript. Quatre couleurs sont tirées avec répétitions possibles ; le secret reste fixe et caché pendant la partie.
-2. Dix essais sont disponibles. Chaque proposition contient quatre couleurs ordonnées de gauche à droite et modifiables avant validation.
-3. Une proposition incomplète ou contenant une couleur non autorisée est refusée avec une explication, sans consommer d'essai ni changer l'historique.
-4. Chaque proposition valide consomme un essai. Propositions et indices restent consultables jusqu'à la nouvelle partie.
-5. Les indices comptent d'abord les couleurs bien placées, puis les présentes mais mal placées parmi les occurrences restantes. Chaque occurrence compte au maximum une fois. Les indices ne désignent pas les positions.
-6. Quatre couleurs bien placées donnent la victoire, même au dixième essai. Dix propositions sans victoire donnent la défaite.
-7. Après la fin, les propositions ne changent plus la partie. **Nouvelle partie** effectue un nouveau tirage et réinitialise essais, historique et indices. Un nouveau tirage peut, par hasard, produire le même code.
+Les règles communes restent : quatre couleurs parmi les six identifiants exacts, répétitions possibles, secret fixe, dix essais maximum, contrôle des occurrences restantes après les bien placées, victoire prioritaire au dixième essai, historique conservé jusqu’au redémarrage et refus sans consommation d’essai. Un nouveau tirage peut donner le même code par hasard.
 
-L'API est locale au module `game.js`, sans API HTTP :
-
-```js
-import { createGame, PALETTE, scoreGuess } from './game.js';
-
-const game = createGame();
-const result = game.submit(['rouge', 'bleu', 'vert', 'jaune']);
-// result : { ok, state, error? }
-// state : { status: 'playing' | 'won' | 'lost', attemptsLeft, history, secret }
-// history : [{ guess, wellPlaced, misplaced }]
-// secret vaut null pendant la partie, puis contient les quatre couleurs.
-game.snapshot();
-game.reset();
-```
-
-Décisions de conception : site statique, sans dépendance, partie non sauvegardée, code révélé après victoire ou défaite. Ces choix ne changent pas les sept règles.
+Décisions : site statique sans dépendances ni stockage, mode normal démarré automatiquement, mode test initialement arrêté, aucune révélation séparée de la solution.
 
 ## Aide et reprise
 
-Après publication du dépôt, signaler un problème dans son onglet **Issues**, s'il est activé. Préciser le navigateur, la taille d'écran, les étapes suivies, le résultat attendu et le résultat observé, sans données privées.
+Signaler un problème dans les [Issues du dépôt](https://github.com/mmartins-heg/code-couleurs/issues) avec les étapes, le navigateur, le résultat attendu et observé, sans données privées. Responsable : propriétaire du dépôt, `mmartins-heg`.
 
-Responsable : propriétaire du dépôt GitHub ; aucune autre équipe n'est désignée. Pour contribuer, lire `AGENTS.md`, limiter les changements au sujet traité, exécuter `node --test` et décrire les contrôles réalisés dans une pull request. La licence de diffusion reste à choisir par le propriétaire ; aucun texte de licence n'a été attribué sans décision de sa part.
+Pour contribuer : lire `AGENTS.md`, limiter les modifications au sujet traité, exécuter `node --test` et les contrôles d’intégration pertinents, puis décrire les résultats dans une pull request. La licence de diffusion reste à choisir par le propriétaire ; aucun texte de licence n’a été attribué sans décision de sa part.

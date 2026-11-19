@@ -19,7 +19,7 @@ function peg(color, extraClass = '') {
 }
 
 function renderGuess() {
-  const ended = game.snapshot().status !== 'playing';
+  const ended = game.getState().status !== 'playing';
   $('guess').replaceChildren(...guess.map((color, index) => {
     const button = document.createElement('button');
     button.className = `slot${index === selected ? ' selected' : ''}`;
@@ -46,7 +46,7 @@ for (const color of PALETTE) {
   button.setAttribute('aria-label', `Choisir ${color} pour la position sélectionnée`);
   button.append(peg(color), document.createTextNode(labels[color]));
   button.addEventListener('click', () => {
-    if (game.snapshot().status !== 'playing') return;
+    if (game.getState().status !== 'playing') return;
     guess[selected] = color;
     const nextEmpty = guess.findIndex((value, index) => index > selected && !value);
     if (nextEmpty !== -1) selected = nextEmpty;
@@ -60,8 +60,10 @@ for (const color of PALETTE) {
 }
 
 function render() {
-  const state = game.snapshot();
-  const ended = state.status !== 'playing';
+  const state = game.getState();
+  const ended = state.status === 'won' || state.status === 'lost';
+  const inactive = state.status !== 'playing';
+  const attemptsLeft = MAX_ATTEMPTS - state.attempts;
   $('history').replaceChildren(...Array.from({ length: MAX_ATTEMPTS }, (_, index) => {
     const entry = state.history[index];
     const row = document.createElement('li');
@@ -76,8 +78,8 @@ function render() {
     const score = document.createElement('div');
     score.className = 'row-score';
     if (entry) {
-      score.setAttribute('aria-label', `${entry.wellPlaced} bien placées, ${entry.misplaced} mal placées`);
-      for (const [value, type] of [[entry.wellPlaced, 'exact'], [entry.misplaced, 'partial']]) {
+      score.setAttribute('aria-label', `${entry.result.wellPlaced} bien placées, ${entry.result.misplaced} mal placées`);
+      for (const [value, type] of [[entry.result.wellPlaced, 'exact'], [entry.result.misplaced, 'partial']]) {
         const group = document.createElement('span');
         group.className = 'score-group';
         group.setAttribute('aria-hidden', 'true');
@@ -94,52 +96,74 @@ function render() {
     return row;
   }));
   $('secret').replaceChildren(...Array.from({ length: 4 }, (_, index) => {
-    if (state.secret) return peg(state.secret[index]);
     const hidden = document.createElement('span');
     hidden.className = 'hidden-peg';
     hidden.textContent = '?';
     hidden.setAttribute('aria-hidden', 'true');
     return hidden;
   }));
-  $('secret').setAttribute('aria-label', state.secret ? `Code secret : ${state.secret.join(', ')}` : 'Code secret : quatre couleurs cachées');
-  $('turn-label').textContent = ended ? 'PARTIE TERMINÉE' : `ESSAI ${String(state.history.length + 1).padStart(2, '0')} / 10`;
-  $('attempts-left').textContent = `${state.attemptsLeft} essai${state.attemptsLeft > 1 ? 's' : ''} restant${state.attemptsLeft > 1 ? 's' : ''}`;
-  $('status-badge').textContent = state.status === 'won' ? 'Code découvert !' : state.status === 'lost' ? 'Code révélé' : 'À vous de jouer';
+  $('secret').setAttribute('aria-label', 'Code secret : quatre couleurs cachées');
+  $('turn-label').textContent = state.status === 'not-started' ? 'PARTIE NON DÉMARRÉE' : ended ? 'PARTIE TERMINÉE' : `ESSAI ${String(state.attempts + 1).padStart(2, '0')} / 10`;
+  $('attempts-left').textContent = `${attemptsLeft} essai${attemptsLeft > 1 ? 's' : ''} restant${attemptsLeft > 1 ? 's' : ''}`;
+  $('status-badge').textContent = state.status === 'not-started' ? 'À démarrer' : state.status === 'won' ? 'Code découvert !' : state.status === 'lost' ? 'Partie terminée' : 'À vous de jouer';
   $('status-badge').classList.toggle('won', state.status === 'won');
   $('guess-title').textContent = state.status === 'won' ? 'Bien joué !' : state.status === 'lost' ? 'On retente ?' : 'Votre intuition ?';
-  $('secret-caption').textContent = ended ? 'Le code a livré tous ses secrets.' : 'Le code reste bien gardé… pour l’instant.';
-  $('submit').disabled = ended;
-  for (const button of $('palette').children) button.disabled = ended;
+  $('secret-caption').textContent = state.status === 'won' ? 'Votre proposition gagnante a percé le code !' : 'Le code reste bien gardé.';
+  $('submit').disabled = inactive;
+  for (const button of $('palette').children) button.disabled = inactive;
   $('board-summary').textContent = state.status === 'won' ? `Code découvert en ${state.history.length} essai${state.history.length > 1 ? 's' : ''}.` : state.status === 'lost' ? 'Dix essais joués. Une nouvelle énigme vous attend.' : 'Chaque indice vous rapproche de la solution.';
   renderGuess();
 }
 
-$('submit').addEventListener('click', () => {
-  const result = game.submit(guess);
-  $('feedback').classList.toggle('error', !result.ok);
-  if (!result.ok) {
-    $('feedback').textContent = result.error;
-    return;
-  }
-  const latest = result.state.history.at(-1);
-  guess = Array(4).fill(null);
-  selected = 0;
-  render();
-  $('feedback').textContent = result.state.status === 'won' ? 'Victoire ! Vous avez trouvé les quatre couleurs dans le bon ordre.' : result.state.status === 'lost' ? 'Partie perdue : les dix essais sont utilisés. Le code est révélé sur le plateau.' : `${latest.wellPlaced} bien placée${latest.wellPlaced > 1 ? 's' : ''}, ${latest.misplaced} mal placée${latest.misplaced > 1 ? 's' : ''}. À vous de continuer !`;
-  if (result.state.status !== 'playing') $('new-game').focus();
-  else $('guess').children[0].focus();
-});
-
-$('new-game').addEventListener('click', () => {
-  game.reset();
+// Les promesses sont résolues après le rendu, sans créer de partie parallèle.
+async function startGame(options) {
+  const state = game.startGame(options); // Peut rejeter sans toucher à l'interface.
   guess = Array(4).fill(null);
   selected = 0;
   render();
   $('feedback').classList.remove('error');
   $('feedback').textContent = 'Nouvelle partie : un nouveau code vous attend.';
+  return state;
+}
+
+async function submitGuess(proposal) {
+  const state = game.submitGuess(proposal);
+  if (state.lastError) {
+    $('feedback').classList.add('error');
+    $('feedback').textContent = state.lastError.message;
+    return state;
+  }
+  guess = Array(4).fill(null);
+  selected = 0;
+  render();
+  $('feedback').classList.remove('error');
+  const { wellPlaced, misplaced } = state.lastResult;
+  $('feedback').textContent = state.status === 'won' ? 'Victoire ! Vous avez trouvé les quatre couleurs dans le bon ordre.' : state.status === 'lost' ? 'Partie perdue : les dix essais sont utilisés. Lancez une nouvelle partie pour retenter votre chance.' : `${wellPlaced} bien placée${wellPlaced > 1 ? 's' : ''}, ${misplaced} mal placée${misplaced > 1 ? 's' : ''}. À vous de continuer !`;
+  return state;
+}
+
+$('submit').addEventListener('click', async () => {
+  const state = await submitGuess(guess);
+  if (!state.lastError) {
+    if (state.status !== 'playing') $('new-game').focus();
+    else $('guess').children[0].focus();
+  }
+});
+$('new-game').addEventListener('click', async () => {
+  await startGame();
   $('guess').children[0].focus();
 });
 $('rules-open').addEventListener('click', () => $('rules').showModal());
 $('rules-close').addEventListener('click', () => $('rules').close());
-render();
+if (new URLSearchParams(location.search).get('test') === '1') {
+  render();
+  $('feedback').textContent = 'Partie non démarrée. Lancez une nouvelle partie pour jouer.';
+  window.codeSecretTest = Object.freeze({
+    version: '0.2', getConfig: game.getConfig, getState: game.getState,
+    startGame, submitGuess,
+  });
+} else {
+  // Le mode normal démarre immédiatement ; aucune API de test n'est exposée.
+  startGame();
+}
 })();

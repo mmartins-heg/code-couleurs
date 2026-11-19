@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 const root = fileURLToPath(new URL('.', import.meta.url));
-const publicFiles = new Set(['index.html', 'style.css', 'app.js', 'game.js', 'game-core.js', 'favicon.svg']);
+const publicFiles = new Set(['index.html', 'style.css', 'app.js', 'game.js', 'game-core.js', 'favicon.svg', 'docs/verification.html', 'docs/verification.js']);
 const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml' };
 const port = Number(process.env.PORT || 4173);
 http.createServer(async (req, res) => {
