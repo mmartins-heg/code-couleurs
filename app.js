@@ -1,4 +1,6 @@
-import { createGame, PALETTE, MAX_ATTEMPTS } from './game.js';
+(() => {
+'use strict';
+const { createGame, PALETTE, MAX_ATTEMPTS } = globalThis.CodeCouleurs;
 
 const symbols = { rouge: '●', bleu: '◆', vert: '▲', jaune: '✦', orange: '■', violet: '✚' };
 const labels = { rouge: 'Rouge', bleu: 'Bleu', vert: 'Vert', jaune: 'Jaune', orange: 'Orange', violet: 'Violet' };
@@ -140,3 +142,4 @@ $('new-game').addEventListener('click', () => {
 $('rules-open').addEventListener('click', () => $('rules').showModal());
 $('rules-close').addEventListener('click', () => $('rules').close());
 render();
+})();

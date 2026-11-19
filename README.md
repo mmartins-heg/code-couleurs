@@ -12,7 +12,9 @@ Code Couleurs est un jeu de déduction en français, pour les personnes qui souh
 
 ## Commencer
 
-Pour jouer localement, un navigateur récent et Node.js sont nécessaires au serveur fourni. Environnement vérifié : Windows, PowerShell, Node.js **24.22.1**. Aucun paquet à installer ; npm n'est pas nécessaire.
+Pour jouer localement, ouvrir **`index.html` dans un navigateur récent** en conservant les autres fichiers du projet à côté. Les pastilles et les commandes sont chargées par des scripts classiques, sans serveur ni installation.
+
+Autre possibilité : utiliser le serveur local fourni. Il nécessite Node.js ; environnement vérifié : Windows, PowerShell, Node.js **24.22.1**. Aucun paquet à installer ; npm n'est pas nécessaire.
 
 1. Ouvrir un terminal dans le dossier du projet.
 2. Lancer le serveur :
@@ -25,7 +27,7 @@ Pour jouer localement, un navigateur récent et Node.js sont nécessaires au ser
 4. Choisir les quatre couleurs, puis cliquer sur **Valider la proposition**.
 5. Arrêter le serveur avec `Ctrl+C` lorsque vous avez terminé.
 
-Ne pas ouvrir simplement `index.html` avec une URL `file://` : l'application utilise des modules JavaScript. Le serveur de développement écoute uniquement sur l'ordinateur local.
+Le serveur de développement écoute uniquement sur l'ordinateur local. Si les pastilles ne s'affichent pas, vérifier que `game-core.js`, `app.js` et `style.css` sont présents à côté de `index.html`, que JavaScript est activé, puis actualiser la page. Une page de fichier sur `github.com` affiche le code source : pour jouer, télécharger le projet et ouvrir le fichier local, utiliser le serveur ci-dessus ou un hébergement web.
 
 Pour la future publication sur GitHub Pages, une fois la publication autorisée et les fichiers envoyés dans un dépôt :
 
@@ -57,6 +59,8 @@ Résultat observé le **17 novembre 2026**, puis confirmé le **19 novembre 2026
 
 Contrôles réalisés dans le navigateur intégré de Codex le **17 novembre 2026** : chargement, refus d'une proposition vide avec dix essais conservés, choix des couleurs, validation avec ajout de l'historique et des indices, nouvelle partie et ouverture/fermeture des règles. Affichage examiné à **1280 × 1050** et **375 × 812**, sans débordement horizontal observé. Aperçu : [capture ordinateur](docs/apercu-ordinateur.jpg).
 
+Correction du chargement le **19 novembre 2026** : remplacement du chargement par modules dans la page par des scripts classiques. Les neuf tests du moteur restent réussis ; un dixième test vérifie que les scripts de la page se compilent sans chargeur de modules et que le moteur s'initialise avant l'interface. Dans le navigateur intégré, via serveur HTTP : pastilles visibles, sélection et validation avec historique et indices fonctionnelles, aucune erreur JavaScript observée. L'ouverture directe en `file://` n'a pas pu être contrôlée dans cet outil, qui bloque ce protocole ; elle reste à confirmer dans le navigateur de l'utilisateur.
+
 Pour une reprise manuelle :
 
 1. Valider une proposition vide : vérifier le message et les dix essais restants.
@@ -74,8 +78,10 @@ Les contrôles d'interface sont manuels, sans suite automatisée de navigateur. 
 | `index.html` | Structure de la page et règles affichées. |
 | `style.css` | Présentation, variantes ordinateur/mobile, focus clavier. |
 | `app.js` | Interactions, rendu du plateau, annonces des résultats. |
-| `game.js` | Moteur indépendant : palette, tirage, validation, indices et état de partie. |
+| `game-core.js` | Moteur indépendant, chargé comme script classique pour permettre l'ouverture locale. |
+| `game.js` | Adaptateur de l'API en module, utilisé par les tests et les intégrations. |
 | `tests/game.test.js` | Tests des règles, dont le contrôle exhaustif des indices. |
+| `tests/classic-loading.test.js` | Contrôle du chargement sans modules dans la page. |
 | `server.mjs` | Serveur de développement local, réservé aux fichiers de l'application. |
 | `favicon.svg` | Icône du projet. |
 | `docs/` | Aperçu de l'interface vérifiée. |
