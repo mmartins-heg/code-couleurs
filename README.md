@@ -7,7 +7,7 @@ Code Couleurs est un jeu de déduction en français, utilisable sur ordinateur e
 - Disponible : six couleurs avec libellés et symboles, quatre positions modifiables, dix essais, indices tenant compte des doublons, historique, victoire, défaite et nouvelle partie.
 - Disponible : API commune de test **0.2**, utilisant exactement la même partie et le même moteur que l’interface, accessible uniquement avec `?test=1`.
 - Disponible : tests Node.js sans dépendances et page de vérification de l’intégration dans le navigateur.
-- Dépôt public : [mmartins-heg/code-couleurs](https://github.com/mmartins-heg/code-couleurs). `jalon-1` conserve la première version ; `jalon-2` identifie la version API 0.2 vérifiée.
+- Dépôt public : [mmartins-heg/code-couleurs](https://github.com/mmartins-heg/code-couleurs). `test` conserve la première version ; `jalon-1` identifie la version API 0.2 vérifiée. Ces tags remplacent respectivement les anciens noms `jalon-1` et `jalon-2`.
 - Limites connues : partie en mémoire, réinitialisée en quittant ou actualisant la page ; aucun compte ni sauvegarde. Le secret n’est jamais révélé séparément, même en fin de partie. Le jeu s’exécute dans le navigateur et ne prétend pas résister à une inspection technique.
 - Disponible : [jeu publié sur GitHub Pages](https://mmartins-heg.github.io/code-couleurs/), vérifié le 19 novembre 2026. Pas de test sur téléphone physique, Safari, Firefox ou lecteur d’écran ; aucun audit complet d’accessibilité.
 
@@ -91,11 +91,11 @@ Résultat local le **19 novembre 2026**, sous Windows avec Node.js 24.22.1 : **1
 
 Dans [la page de vérification](https://mmartins-heg.github.io/code-couleurs/docs/verification.html), cliquer sur **Exécuter les contrôles**. Elle charge le véritable jeu dans un cadre et compare l’API avec l’écran. Résultat local via HTTP, puis confirmé sur **l’adresse GitHub Pages publiée** dans le navigateur intégré de Codex le **19 novembre 2026** : **20 contrôles réussis, aucun échec**. Cela couvre notamment l’absence de l’API en mode normal, les promesses, T01 à T09, les refus, la victoire au dixième essai, la défaite, l’absence de révélation, les copies indépendantes, les actions de l’interface et le rechargement propre du mode test. Cette page ne remplace pas l’outil de test de l’enseignant, non fourni.
 
-Le workflow GitHub des tests et le premier déploiement Pages ont réussi pour le commit applicatif `0412675`. L’interface publiée a aussi été examinée à **375 × 812** et **1280 × 1050** : sélection, validation d’une proposition, historique, indices et nouvelle partie fonctionnels ; aucun débordement horizontal observé. Le tag `jalon-2` ajoute à ce même code la présente documentation des résultats.
+Le workflow GitHub des tests et le premier déploiement Pages ont réussi pour le commit applicatif `0412675`. L’interface publiée a aussi été examinée à **375 × 812** et **1280 × 1050** : sélection, validation d’une proposition, historique, indices et nouvelle partie fonctionnels ; aucun débordement horizontal observé. Le tag `jalon-1` (anciennement `jalon-2`) ajoute à ce même code la documentation des résultats.
 
 Contrôles manuels utiles : modifier une position avant validation ; jouer au clavier (`Tab`, `Entrée` ou `Espace`) ; ouvrir et fermer les règles ; examiner les propositions et indices ; relancer une partie ; vérifier sur un smartphone physique. L’ouverture directe `file://` n’est pas contrôlable par l’outil de navigateur utilisé ici ; le chargement sans modules est testé séparément.
 
-Les résultats historiques du 17 novembre concernaient `jalon-1` et ne constituent pas la vérification de l’API 0.2. [La capture initiale](docs/apercu-ordinateur.jpg) illustre uniquement la présentation de cette première version.
+Les résultats historiques du 17 novembre concernaient la première version, désormais repérée par `test`, et ne constituent pas la vérification de l’API 0.2. [La capture initiale](docs/apercu-ordinateur.jpg) illustre uniquement la présentation de cette première version.
 
 ## Se repérer
 
