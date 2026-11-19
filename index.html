@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f6f5f0">
+    <meta name="description" content="Quatre couleurs à découvrir, dix essais pour percer le code. Un jeu de déduction gratuit, sur ordinateur et mobile.">
+    <title>Code Couleurs — À vous de décoder</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./style.css">
+    <script type="module" src="./app.js"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Code Couleurs, accueil"><span class="brand-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span>code couleurs<span class="brand-dot">.</span></a>
+      <span class="top-note">Un peu de logique. Beaucoup de couleurs.</span>
+      <button class="text-button" id="rules-open" aria-haspopup="dialog">Comment jouer <span aria-hidden="true">↗</span></button>
+    </header>
+
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <p class="eyebrow"><span></span> LE JEU DE DÉDUCTION</p>
+        <h1 id="page-title">À vous de <em>décoder.</em></h1>
+        <p>Quatre couleurs cachées. Dix essais pour les découvrir.<br>Observez les indices, affinez votre intuition.</p>
+      </section>
+
+      <div class="game-layout">
+        <section class="board card" aria-labelledby="board-title">
+          <div class="card-heading"><div><p class="eyebrow">VOTRE MISSION</p><h2 id="board-title">Percer le code</h2></div><span id="status-badge" class="badge">À vous de jouer</span></div>
+          <div class="secret-area"><div class="secret-pegs" id="secret" aria-label="Code secret : quatre couleurs cachées"></div><p id="secret-caption">Le code reste bien gardé… pour l’instant.</p></div>
+          <div class="board-labels"><span>VOS PROPOSITIONS</span><span>INDICES <span title="Bien placées · Mal placées">↙</span></span></div>
+          <ol id="history" class="history" aria-label="Historique des propositions"></ol>
+          <div class="board-bottom"><span class="live-dot" aria-hidden="true"></span><span id="board-summary">Chaque indice vous rapproche de la solution.</span></div>
+        </section>
+
+        <aside class="side-panel" aria-label="Commandes et aide">
+          <section class="composer card" aria-labelledby="guess-title">
+            <div class="turn-heading"><p class="eyebrow" id="turn-label">ESSAI 01 / 10</p><span id="attempts-left">10 essais restants</span></div>
+            <h2 id="guess-title">Votre intuition ?</h2>
+            <p class="muted">Sélectionnez une position, puis une couleur.</p>
+            <div id="guess" class="guess-slots" role="group" aria-label="Les quatre positions de votre proposition"></div>
+            <div class="palette-heading"><span>À VOUS DE CHOISIR</span><span>Répétitions autorisées</span></div>
+            <div id="palette" class="palette" role="group" aria-label="Palette des six couleurs"></div>
+            <button id="submit" class="primary-button">Valider la proposition <span aria-hidden="true">→</span></button>
+            <p id="feedback" class="feedback" role="status" aria-live="polite" aria-atomic="true">Les couleurs peuvent apparaître plusieurs fois.</p>
+            <button id="new-game" class="new-game"><span aria-hidden="true">↻</span> Nouvelle partie</button>
+          </section>
+
+          <section class="guide card" aria-labelledby="guide-title"><span class="guide-icon" aria-hidden="true">✳</span><h2 id="guide-title">Les indices, en clair.</h2><div class="legend-line"><span class="indicator exact" aria-hidden="true"></span><div><strong>Bien placée</strong><p>Bonne couleur, bonne position.</p></div></div><div class="legend-line"><span class="indicator partial" aria-hidden="true"></span><div><strong>Mal placée</strong><p>Bonne couleur, autre position.</p></div></div><p class="guide-note">Les nombres sont des totaux : ils ne révèlent jamais quelles positions sont concernées.</p></section>
+        </aside>
+      </div>
+      <footer><span>Faites parler les couleurs.</span><span>6 couleurs · 4 positions · 10 essais</span></footer>
+    </main>
+
+    <dialog id="rules" aria-labelledby="rules-title"><div class="dialog-heading"><p class="eyebrow">LES RÈGLES DU JEU</p><button id="rules-close" class="close-button" aria-label="Fermer les règles">×</button></div><h2 id="rules-title">Un code. À vous de le trouver.</h2><ol><li>Découvrez les quatre couleurs du code, dans le bon ordre. Une couleur peut se répéter.</li><li>Choisissez une position, puis une couleur parmi les six proposées. Vous pouvez tout modifier avant de valider.</li><li>Après chaque proposition, consultez les deux nombres : couleurs bien placées et couleurs présentes mais mal placées. Chaque occurrence compte une seule fois.</li><li>Vous avez dix essais. Quatre couleurs bien placées donnent la victoire, même au dernier essai.</li><li>Une proposition incomplète ou non autorisée ne consomme aucun essai. Après la fin, lancez une nouvelle partie pour rejouer.</li></ol><p class="keyboard-note">Au clavier : Tab pour naviguer, Entrée ou Espace pour choisir. Échap ferme cette fenêtre.</p></dialog>
+    <noscript>Activez JavaScript dans votre navigateur pour jouer à Code Couleurs.</noscript>
+  </body>
+</html>

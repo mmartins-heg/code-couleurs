@@ -1,0 +1,11 @@
+{
+  "name": "code-couleurs",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Un jeu de déduction de quatre couleurs, en français.",
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test"
+  }
+}
